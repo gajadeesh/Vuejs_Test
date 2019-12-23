@@ -49,6 +49,10 @@ To Test the Production Environment Type on command line
 npm start
 ```
 
+## Version
+
+1.0
+
 ## Authors
 
 * **Gajathesan Ramanathan** - *Initial work*
