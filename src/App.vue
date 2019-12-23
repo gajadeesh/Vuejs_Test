@@ -1,28 +1,31 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app>
+    <v-app-bar app color="primary">
+
+    <v-layout align-start justify-start>
+      <h4 class="white--text px-2">Theme Change</h4>
+      <v-switch class="white--text" :label="$vuetify.theme.dark ? ('Dark') : ('Light')" v-model="$vuetify.theme.dark"></v-switch>
+    </v-layout>
+    </v-app-bar>
+
+    <v-content>
+      <Dashboard/>
+    </v-content>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Dashboard from './views/Dashboard';
 
 export default {
-  name: 'app',
+  name: 'App',
+  data(){
+    return{
+      Dswitch:this.$vuetify.theme.dark
+    }
+  },
   components: {
-    HelloWorld
+    Dashboard,
   }
-}
+};
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
