@@ -26,7 +26,7 @@
             </v-layout>
             <v-layout row wrap>
               <v-flex md12>
-                <v-text-field v-model="search" label="Search..." color="white" outlined pa-2></v-text-field>
+                <v-text-field v-model="search" :disabled="Evalue" label="Search..." color="white" outlined pa-2></v-text-field>
               </v-flex>
             </v-layout>
           </v-flex>
