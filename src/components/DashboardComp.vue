@@ -6,27 +6,36 @@
           <v-flex md8 sm12>
             <v-layout row wrap>
               <v-layout column px-2>
-              <v-select
-                color="white"
-                :items="Sectionitems"
-                v-model="SectionSelected"
-                label="Select Section"
-              ></v-select>
+                <v-select
+                  color="white"
+                  :items="Sectionitems"
+                  v-model="SectionSelected"
+                  label="Select Section"
+                ></v-select>
               </v-layout>
               <v-layout column px-2>
-              <v-select
-                color="white"
-                :items="Fieldsitems"
-                v-model="FieldSelected"
-                label="Select Field"
-                clearable
-              ></v-select>
-              <v-checkbox label="Empty Value" v-if="FieldSelected" v-model="Evalue"></v-checkbox>
+                <v-select
+                  color="white"
+                  :items="Fieldsitems"
+                  v-model="FieldSelected"
+                  label="Select Field"
+                  clearable
+                ></v-select>
+                <v-checkbox label="Empty Value" v-if="FieldSelected" v-model="Evalue"></v-checkbox>
               </v-layout>
             </v-layout>
             <v-layout row wrap>
               <v-flex md12>
-                <v-text-field v-model="search" :disabled="Evalue" label="Search..." color="white" outlined pa-2></v-text-field>
+                <!-- <p class="error--text">press enter to search!...</p> -->
+                <v-text-field
+                  v-model="search"
+                  :disabled="Evalue"
+                  label="Press enter to search..."
+                  color="white"
+                  @keyup.enter="searchCheck"
+                  outlined
+                  pa-2
+                ></v-text-field>
               </v-flex>
             </v-layout>
           </v-flex>
@@ -111,17 +120,12 @@
         <template v-slot:default>
           <thead>
             <tr>
-              <th
-                class="text-left"
-                v-for="th in Fieldsitems"
-                v-if="!ignoreStuffs.includes(th)"
-                :key="th.id"
-              >{{th}}</th>
+              <th class="text-left" v-for="th in Fieldsitems" :key="th.id">{{th}}</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="item in resultSection" :key="item.name">
-              <td v-for="th in Fieldsitems" :key="th.id" v-if="!ignoreStuffs.includes(th)">
+              <td v-for="th in Fieldsitems" :key="th.id">
                 <div v-if="listStuffs.includes(th)" py-2>
                   <ul v-for="ls in item[th]" :key="ls.id">
                     <li>{{ls}}</li>
@@ -138,17 +142,12 @@
         <template v-slot:default>
           <thead>
             <tr>
-              <th
-                class="text-left"
-                v-for="th in Fieldsitems"
-                v-if="!ignoreStuffs.includes(th)"
-                :key="th.id"
-              >{{th}}</th>
+              <th class="text-left" v-for="th in Fieldsitems" :key="th.id">{{th}}</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="item in resultFieldSection" :key="item.name">
-              <td v-for="th in Fieldsitems" :key="th.id" v-if="!ignoreStuffs.includes(th)">
+              <td v-for="th in Fieldsitems" :key="th.id">
                 <div v-if="listStuffs.includes(th)" py-2>
                   <ul v-for="ls in item[th]" :key="ls.id">
                     <li>{{ls}}</li>
@@ -172,7 +171,7 @@ export default {
       Organizations: [],
       search: "",
       HideMain: false,
-      Evalue:false,
+      Evalue: false,
       Sectionitems: ["Organizations", "Users", "Tickets"],
       Fieldsitems: [],
       resultSection: [],
@@ -184,7 +183,7 @@ export default {
       STickets: [],
       SUAssignee: [],
       SUSubmitter: [],
-      
+
       SUOrgID: 0,
       STOrgId: 0,
       FUsers: [],
@@ -215,27 +214,25 @@ export default {
     SectionSelected: function(val) {
       this.fields(val);
     },
-    search: function(val) {
-      if (this.SectionSelected && this.FieldSelected) {
-        this.FieldSearchFilter(val);
-      } else if (this.SectionSelected) {
-        this.SearchFilter(val);
-      }
-    },
-    FieldSelected:function(e){
+    // search: function(val) {
+    //   if (this.SectionSelected && this.FieldSelected) {
+    //     this.FieldSearchFilter(val);
+    //   } else if (this.SectionSelected) {
+    //     this.SearchFilter(val);
+    //   }
+    // },
+    FieldSelected: function(e) {
       if (!e) {
-        this.fields(this.SectionSelected)
-        this.Evalue = false
+        this.fields(this.SectionSelected);
+        this.Evalue = false;
       }
     },
-    Evalue:function(e){
+    Evalue: function(e) {
       if (e) {
-        this.EmptySearchFilter(e)
-      }else{
-        this.fields(this.SectionSelected)
-
+        this.EmptySearchFilter(e);
+      } else {
+        this.fields(this.SectionSelected);
       }
-        
     }
   },
   computed: {
@@ -251,6 +248,13 @@ export default {
     }
   },
   methods: {
+    searchCheck: function() {
+      if (this.SectionSelected && this.FieldSelected) {
+        this.FieldSearchFilter(this.search);
+      } else if (this.SectionSelected) {
+        this.SearchFilter(this.search);
+      }
+    },
     fields: function(e) {
       const vm = this;
 
@@ -265,32 +269,20 @@ export default {
       });
       // }
     },
-    EmptySearchFilter:function(e){
+    EmptySearchFilter: function(e) {
       // console.log(e)
       const fs = this.FieldSelected;
       const FSresult = this.resultSection.filter(r => {
-        // if (SectionSelected == 'Tickets' && Evalue) {
-          // return r[fs] == ""
-          return r[fs] == "" || r[fs] == null;
-        // }else{
-        //   return r[fs] == e ;
-        // }
-        // return r[fs] == e;
+        return r[fs] == "" || r[fs] == null;
       });
-      console.log(FSresult)
-      this.resultSection = FSresult
+      // console.log(FSresult)
+      this.resultSection = FSresult;
     },
     FieldSearchFilter: function(e) {
       e ? (this.HideMain = false) : (this.HideMain = true);
       const fs = this.FieldSelected;
       const FSresult = this.resultSection.filter(r => {
-        // if (SectionSelected == 'Tickets' && Evalue) {
-          // return r[fs] == ""
-          // return r[fs] === "";
-        // }else{
-          return r[fs] == e ;
-        // }
-        // return r[fs] == e;
+        return r[fs] == e;
       });
       // console.log(FSresult)
       this.resultFieldSection = FSresult;
@@ -298,7 +290,9 @@ export default {
     SearchFilter: function(e) {
       e ? (this.HideMain = false) : (this.HideMain = true);
       if (this.SectionSelected == "Organizations") {
-        const Sresult = this.resultSection.find(r => r.name == e);
+        const Sresult = this.resultSection.find(r => r._id == e);
+        // console.log(Sresult);
+
         const OrgId = Sresult._id;
         this.Org(OrgId);
       } else if (this.SectionSelected == "Users") {
