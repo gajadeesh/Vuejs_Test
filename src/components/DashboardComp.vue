@@ -296,13 +296,13 @@ export default {
         const OrgId = Sresult._id;
         this.Org(OrgId);
       } else if (this.SectionSelected == "Users") {
-        const Sresult = this.resultSection.find(r => r.name == e);
+        const Sresult = this.resultSection.find(r => r._id == e);
         const UsrId = Sresult._id;
         const UserName = Sresult.name;
         const OrganizationId = Sresult.organization_id;
         this.Usr(UsrId, UserName, OrganizationId);
       } else if (this.SectionSelected == "Tickets") {
-        this.STickets = this.resultSection.find(r => r.subject == e);
+        this.STickets = this.resultSection.find(r => r._id == e);
         this.UsersFilter;
         this.OrganizationsFilter;
       } else {
